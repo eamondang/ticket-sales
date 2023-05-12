@@ -1,0 +1,68 @@
+#+begin_src sh :results output
+near call dev-1683909771895-45807031486367 new '{"price": 1}' --account-id dev-1683909771895-45807031486367
+#+end_src
+
+#+RESULTS:
+: Scheduling a call: dev-1683909771895-45807031486367.new({"price": 1})
+: Doing account.functionCall()
+: Transaction Id 8LR8BCHVHVnHfm7deseFtdTZh5QD2bMZoHuVibqNA7k2
+: To see the transaction in the transaction explorer, please open this url in your browser
+: https://explorer.testnet.near.org/transactions/8LR8BCHVHVnHfm7deseFtdTZh5QD2bMZoHuVibqNA7k2
+: ''
+
+#+begin_src sh :results output
+near call dev-1683909771895-45807031486367 add_tickets '{"ticket_links" : ["helloslkdjflaskjdf", "helakdjfasl","alsdkfjalksdjfla", "aldjflaksdjfl"]}' --account-id dev-1683909771895-45807031486367
+#+end_src
+
+#+RESULTS:
+: Scheduling a call: dev-1683909771895-45807031486367.add_tickets({"ticket_links" : ["helloslkdjflaskjdf", "helakdjfasl","alsdkfjalksdjfla", "aldjflaksdjfl"]})
+: Doing account.functionCall()
+: Transaction Id BLsQZhpBVinCLzg8gLgn8psUQpZoP8ESEEkL31w9bSGP
+: To see the transaction in the transaction explorer, please open this url in your browser
+: https://explorer.testnet.near.org/transactions/BLsQZhpBVinCLzg8gLgn8psUQpZoP8ESEEkL31w9bSGP
+: ''
+
+#+begin_src sh :results output
+near view dev-1683909771895-45807031486367 get_price
+#+end_src
+
+#+RESULTS:
+: View call: dev-1683909771895-45807031486367.get_price()
+: 1
+
+#+begin_src sh :results output
+near view dev-1683909771895-45807031486367 get_ticket '{"key": 1}'
+#+end_src
+
+#+RESULTS:
+: View call: dev-1683909771895-45807031486367.get_ticket({"key": 1})
+: 'helakdjfasl'
+
+#+begin_src sh :results output
+near view dev-1683909771895-45807031486367 get_all_tickets
+#+end_src
+
+#+begin_src sh :results output
+near call dev-1683909771895-45807031486367 add_coupon '{"code": "NEARAPAC", "discount": 50}' --account-id dev-1683909771895-45807031486367
+#+end_src
+
+#+RESULTS:
+: Scheduling a call: dev-1683909771895-45807031486367.add_coupon({"code": "NEARAPAC", "discount": 50})
+: Doing account.functionCall()
+: Transaction Id HJMmuBSDHxhfPZZBefDzVEGXcUyqYVmfqNAYbS4cXDQv
+: To see the transaction in the transaction explorer, please open this url in your browser
+: https://explorer.testnet.near.org/transactions/HJMmuBSDHxhfPZZBefDzVEGXcUyqYVmfqNAYbS4cXDQv
+: ''
+
+
+#+begin_src sh :results output
+near call dev-1683909771895-45807031486367 purchase_ticket '{"coupon_code" : "NEARAPAC"}' --account-id eamon.testnet --amount 1
+#+end_src
+
+#+RESULTS:
+: Scheduling a call: dev-1683909771895-45807031486367.purchase_ticket({"coupon_code" : "NEARAPAC"}) with attached 1 NEAR
+: Doing account.functionCall()
+: Transaction Id 2ZN22o7acu3fc4FXw3nxpkX6nksXVgWPfdTfyRYhwx9o
+: To see the transaction in the transaction explorer, please open this url in your browser
+: https://explorer.testnet.near.org/transactions/2ZN22o7acu3fc4FXw3nxpkX6nksXVgWPfdTfyRYhwx9o
+: ''
