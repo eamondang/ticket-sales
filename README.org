@@ -1,68 +1,184 @@
+* initial
 #+begin_src sh :results output
-near call dev-1683909771895-45807031486367 new '{"price": 1}' --account-id dev-1683909771895-45807031486367
+near call dev-1683985953930-26156146132065 new '{}' --account-id dev-1683985953930-26156146132065
 #+end_src
 
 #+RESULTS:
-: Scheduling a call: dev-1683909771895-45807031486367.new({"price": 1})
+: Scheduling a call: dev-1683985953930-26156146132065.new({})
 : Doing account.functionCall()
-: Transaction Id 8LR8BCHVHVnHfm7deseFtdTZh5QD2bMZoHuVibqNA7k2
+: Transaction Id GPACKaurtQvUKaXM2AQQXazJ11gdVdjRddZJZ99ZMEZv
 : To see the transaction in the transaction explorer, please open this url in your browser
-: https://explorer.testnet.near.org/transactions/8LR8BCHVHVnHfm7deseFtdTZh5QD2bMZoHuVibqNA7k2
+: https://explorer.testnet.near.org/transactions/GPACKaurtQvUKaXM2AQQXazJ11gdVdjRddZJZ99ZMEZv
+: ''
+
+* Elite
+** Add Elite Tickets
+#+begin_src sh :results output
+near call dev-1683985953930-26156146132065 add_tickets_elite '{"ticket_links": [
+"http://localhost:3000/v2.keypom.testnet/5mPwKWL5kdVZGfVeKRZHLG1ZvfA35NBVjfBBd9s9mf1GKP4DxkVdPJ3dRUD2YLvSMNquWZPAukgxG2yVBHRkzs7b",
+"http://localhost:3000/v2.keypom.testnet/JwJieu2vQv4WJiwMaA8UqQeW7TuEgHnZ4BHAMuVKNXqMFuscSoUT1WamryumrQUPznn7YhU97rjy7mhuevbeniF",
+"http://localhost:3000/v2.keypom.testnet/5PsWwFPW33VM98trayd7ET7g6jPQMyJWZbS1Vm4MaBp9qzySn4eLqeYs4mhvU8kaugzb8HAuzyLhYkqqibqGejyR",
+"http://localhost:3000/v2.keypom.testnet/fFeQaHmAidRzU1cQP99wCqb4Lfdw79vZMmmPjq4onbQzto4ByKzr8RM8CJigqHkY2jYgXLw9v1DpdcYKa5Ujwoz",
+"http://localhost:3000/v2.keypom.testnet/5e5Xv2hCm5E8nRbrq56nXxyf4jeaoEgBQSAdeWf1b1BeDB8LP5t39VW4zHFKYEXviS1JVqJ7Rds4B9fetBxNix9o",
+"http://localhost:3000/v2.keypom.testnet/5ArQgHXCotw5x54tRkoNFrxU3o9gayWUu2VbAyfMgUGoNg7fbHp3DLdCqoFWU5USGMybGNn6euPGPKVZKYry72XB",
+"http://localhost:3000/v2.keypom.testnet/9ewFaGDXrY1XzrYXD6n2hRJnbSizkjWfJL2WktQSLPeSN9fqAesgQL4xzNeE9pkVgP9fVDnix98drTQxMToZC3k",
+"http://localhost:3000/v2.keypom.testnet/4ifNKGQX7Ho4KuAM54aLBXYF1WBGSQRZipyjdMqRn87u9K82wkL2uFG9iSdE61bqWVsjZjSTcedGzLwAWQSrdQKp",
+"http://localhost:3000/v2.keypom.testnet/2yZJMLp3KgxWTKjChm4HDaTN34im3ykiKa7EykQmfUKZPDCSUzeQyWeHjREQvkVyrL88zT4jCPjikk4fih2Fdukq",
+"http://localhost:3000/v2.keypom.testnet/2tuSojk6u817XjKKrHwzFtLVcmKaFvXZ8SuWEogx9Q47NQCV5konga7f9icZAoraZU7unYkjBMsGJhJ9AHbfkRH6",
+"http://localhost:3000/v2.keypom.testnet/D5K12eERgXopd6WGwAowii1xTDEP9mzR6jpzJrDPKbu3HQzmovbmsjjUtQhbrS8XHvhJwK9Pd1snJ5vcBTHJvcR",
+"http://localhost:3000/v2.keypom.testnet/3qztJQY4sFqiqYspMzBDMybCCF3mjFqJetgQTaNRAcVcWYN7oYVpLk1VpRYmjNm9BMzA3UZi3v1At5G9rLQc4ENZ",
+"http://localhost:3000/v2.keypom.testnet/2ywwpwiFi6dXkbzCLWnRJenLTxiuQKmxmh5qUjMoCTJaBYSCyyYkb1sgrgEyrbFhD5TifvqTwKeVSMnUwu7jRHoz",
+"http://localhost:3000/v2.keypom.testnet/2mzXzMzAfmaLKvcqJB8q1EawgYCC2GFyYNqRLLZWDNfhw8iXAgDCB6ri5xrfBqbEL9tFfpBArms1Hy4z6Nuz72Nf",
+"http://localhost:3000/v2.keypom.testnet/4qduiKMSM15BUyGrdef9bD8yJhJbTX8DhXMwPCMcaWL5i5TrzcLUC6N4yfFLjA5LJCx1mkka2ePSLmV6gyxGKdim",
+"http://localhost:3000/v2.keypom.testnet/4TW6ZHXrUJ7Q67cuVsDruYxqCZYnnnjEwYTuJK9fYZNTWaaiDGPuhuWTRMCLvWyy9WX29qs9tCUeEP1ESFUFyu5U",
+"http://localhost:3000/v2.keypom.testnet/4q21Qw99uwt9fVw3PnPyNWrM1qgB5RPxPUG6UJ7ocn6sAANQ7CvLanHc7Db3TbEno7mv8jAAJbnPGXjmdd8D1DoE",
+"http://localhost:3000/v2.keypom.testnet/3jqCFKM4S4FsHJUxKaj4BqGvWc5bngtXRXcx6f7zzj6ikFVaVfHxGoxgbma5uGKktHH2BEq55h2yYTZNUpPZ8TWH",
+"http://localhost:3000/v2.keypom.testnet/3YegaKWNd8KjDBfYUdnKMJ5euxpVx66zreRo9JaDJMrhzbR42jjJva3hn7rkNVibXfTFsmh2oA1r9FJkn7VNVeNc",
+"http://localhost:3000/v2.keypom.testnet/2zKMGefpGzgYDoRcrchfD6qwqS4ZiLrKrLnkgnEdhDZXD317k9xepsHZrqckiLicSMmw6XCfGZDUemhjo9nuN8yz"
+]}' --account-id dev-1683985953930-26156146132065
+#+end_src
+
+** Get All Elite Tickets
+#+begin_src sh :results output
+near call dev-1683985953930-26156146132065 get_all_tickets_elite --account-id dev-1683985953930-26156146132065
+#+end_src
+
+** Purchase Elite Ticket
+#+begin_src sh :results output
+near call dev-1683985953930-26156146132065 purchase_elite_ticket --account-id eamon.testnet
+#+end_src
+
+#+RESULTS:
+: Scheduling a call: dev-1683985953930-26156146132065.purchase_elite_ticket()
+: Doing account.functionCall()
+: Receipt: HzVfsnYc7v3z5wC9UKRUxZKMNL7MifMrWK4r1HVC9v6N
+:   Log [dev-1683985953930-26156146132065]: EVENT_JSON:{"standard":"1.0.0","event":"purchase","data":[{"owner_id":"eamon.testnet","ticket_link":"http://localhost:3000/v2.keypom.testnet/5mPwKWL5kdVZGfVeKRZHLG1ZvfA35NBVjfBBd9s9mf1GKP4DxkVdPJ3dRUD2YLvSMNquWZPAukgxG2yVBHRkzs7b"}]}
+: Transaction Id 7ULCnqxQZhKgmdcBfXhocnxgB6Do275EkfwYBMqzV6Dn
+: To see the transaction in the transaction explorer, please open this url in your browser
+: https://explorer.testnet.near.org/transactions/7ULCnqxQZhKgmdcBfXhocnxgB6Do275EkfwYBMqzV6Dn
+: ''
+
+* Premium
+** Add Premium Tickets
+#+begin_src sh :results output
+near call dev-1683985953930-26156146132065 add_tickets_premium '{"ticket_links" : [
+"http://localhost:3000/v2.keypom.testnet/5mPwKWL5kdVZGfVeKRZHLG1ZvfA35NBVjfBBd9s9mf1GKP4DxkVdPJ3dRUD2YLvSMNquWZPAukgxG2yVBHRkzs7b",
+"http://localhost:3000/v2.keypom.testnet/JwJieu2vQv4WJiwMaA8UqQeW7TuEgHnZ4BHAMuVKNXqMFuscSoUT1WamryumrQUPznn7YhU97rjy7mhuevbeniF",
+"http://localhost:3000/v2.keypom.testnet/5PsWwFPW33VM98trayd7ET7g6jPQMyJWZbS1Vm4MaBp9qzySn4eLqeYs4mhvU8kaugzb8HAuzyLhYkqqibqGejyR",
+"http://localhost:3000/v2.keypom.testnet/fFeQaHmAidRzU1cQP99wCqb4Lfdw79vZMmmPjq4onbQzto4ByKzr8RM8CJigqHkY2jYgXLw9v1DpdcYKa5Ujwoz",
+"http://localhost:3000/v2.keypom.testnet/5e5Xv2hCm5E8nRbrq56nXxyf4jeaoEgBQSAdeWf1b1BeDB8LP5t39VW4zHFKYEXviS1JVqJ7Rds4B9fetBxNix9o",
+"http://localhost:3000/v2.keypom.testnet/5ArQgHXCotw5x54tRkoNFrxU3o9gayWUu2VbAyfMgUGoNg7fbHp3DLdCqoFWU5USGMybGNn6euPGPKVZKYry72XB",
+"http://localhost:3000/v2.keypom.testnet/9ewFaGDXrY1XzrYXD6n2hRJnbSizkjWfJL2WktQSLPeSN9fqAesgQL4xzNeE9pkVgP9fVDnix98drTQxMToZC3k",
+"http://localhost:3000/v2.keypom.testnet/4ifNKGQX7Ho4KuAM54aLBXYF1WBGSQRZipyjdMqRn87u9K82wkL2uFG9iSdE61bqWVsjZjSTcedGzLwAWQSrdQKp",
+"http://localhost:3000/v2.keypom.testnet/2yZJMLp3KgxWTKjChm4HDaTN34im3ykiKa7EykQmfUKZPDCSUzeQyWeHjREQvkVyrL88zT4jCPjikk4fih2Fdukq",
+"http://localhost:3000/v2.keypom.testnet/2tuSojk6u817XjKKrHwzFtLVcmKaFvXZ8SuWEogx9Q47NQCV5konga7f9icZAoraZU7unYkjBMsGJhJ9AHbfkRH6",
+"http://localhost:3000/v2.keypom.testnet/D5K12eERgXopd6WGwAowii1xTDEP9mzR6jpzJrDPKbu3HQzmovbmsjjUtQhbrS8XHvhJwK9Pd1snJ5vcBTHJvcR",
+"http://localhost:3000/v2.keypom.testnet/3qztJQY4sFqiqYspMzBDMybCCF3mjFqJetgQTaNRAcVcWYN7oYVpLk1VpRYmjNm9BMzA3UZi3v1At5G9rLQc4ENZ",
+"http://localhost:3000/v2.keypom.testnet/2ywwpwiFi6dXkbzCLWnRJenLTxiuQKmxmh5qUjMoCTJaBYSCyyYkb1sgrgEyrbFhD5TifvqTwKeVSMnUwu7jRHoz",
+"http://localhost:3000/v2.keypom.testnet/2mzXzMzAfmaLKvcqJB8q1EawgYCC2GFyYNqRLLZWDNfhw8iXAgDCB6ri5xrfBqbEL9tFfpBArms1Hy4z6Nuz72Nf",
+"http://localhost:3000/v2.keypom.testnet/4qduiKMSM15BUyGrdef9bD8yJhJbTX8DhXMwPCMcaWL5i5TrzcLUC6N4yfFLjA5LJCx1mkka2ePSLmV6gyxGKdim",
+"http://localhost:3000/v2.keypom.testnet/4TW6ZHXrUJ7Q67cuVsDruYxqCZYnnnjEwYTuJK9fYZNTWaaiDGPuhuWTRMCLvWyy9WX29qs9tCUeEP1ESFUFyu5U",
+"http://localhost:3000/v2.keypom.testnet/4q21Qw99uwt9fVw3PnPyNWrM1qgB5RPxPUG6UJ7ocn6sAANQ7CvLanHc7Db3TbEno7mv8jAAJbnPGXjmdd8D1DoE",
+"http://localhost:3000/v2.keypom.testnet/3jqCFKM4S4FsHJUxKaj4BqGvWc5bngtXRXcx6f7zzj6ikFVaVfHxGoxgbma5uGKktHH2BEq55h2yYTZNUpPZ8TWH",
+"http://localhost:3000/v2.keypom.testnet/3YegaKWNd8KjDBfYUdnKMJ5euxpVx66zreRo9JaDJMrhzbR42jjJva3hn7rkNVibXfTFsmh2oA1r9FJkn7VNVeNc",
+"http://localhost:3000/v2.keypom.testnet/2zKMGefpGzgYDoRcrchfD6qwqS4ZiLrKrLnkgnEdhDZXD317k9xepsHZrqckiLicSMmw6XCfGZDUemhjo9nuN8yz"
+]}' --account-id dev-1683985953930-26156146132065
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Scheduling a call: dev-1683985953930-26156146132065.add_tickets_premium({"ticket_links" : [
+"http://localhost:3000/v2.keypom.testnet/5mPwKWL5kdVZGfVeKRZHLG1ZvfA35NBVjfBBd9s9mf1GKP4DxkVdPJ3dRUD2YLvSMNquWZPAukgxG2yVBHRkzs7b",
+"http://localhost:3000/v2.keypom.testnet/JwJieu2vQv4WJiwMaA8UqQeW7TuEgHnZ4BHAMuVKNXqMFuscSoUT1WamryumrQUPznn7YhU97rjy7mhuevbeniF",
+"http://localhost:3000/v2.keypom.testnet/5PsWwFPW33VM98trayd7ET7g6jPQMyJWZbS1Vm4MaBp9qzySn4eLqeYs4mhvU8kaugzb8HAuzyLhYkqqibqGejyR",
+"http://localhost:3000/v2.keypom.testnet/fFeQaHmAidRzU1cQP99wCqb4Lfdw79vZMmmPjq4onbQzto4ByKzr8RM8CJigqHkY2jYgXLw9v1DpdcYKa5Ujwoz",
+"http://localhost:3000/v2.keypom.testnet/5e5Xv2hCm5E8nRbrq56nXxyf4jeaoEgBQSAdeWf1b1BeDB8LP5t39VW4zHFKYEXviS1JVqJ7Rds4B9fetBxNix9o",
+"http://localhost:3000/v2.keypom.testnet/5ArQgHXCotw5x54tRkoNFrxU3o9gayWUu2VbAyfMgUGoNg7fbHp3DLdCqoFWU5USGMybGNn6euPGPKVZKYry72XB",
+"http://localhost:3000/v2.keypom.testnet/9ewFaGDXrY1XzrYXD6n2hRJnbSizkjWfJL2WktQSLPeSN9fqAesgQL4xzNeE9pkVgP9fVDnix98drTQxMToZC3k",
+"http://localhost:3000/v2.keypom.testnet/4ifNKGQX7Ho4KuAM54aLBXYF1WBGSQRZipyjdMqRn87u9K82wkL2uFG9iSdE61bqWVsjZjSTcedGzLwAWQSrdQKp",
+"http://localhost:3000/v2.keypom.testnet/2yZJMLp3KgxWTKjChm4HDaTN34im3ykiKa7EykQmfUKZPDCSUzeQyWeHjREQvkVyrL88zT4jCPjikk4fih2Fdukq",
+"http://localhost:3000/v2.keypom.testnet/2tuSojk6u817XjKKrHwzFtLVcmKaFvXZ8SuWEogx9Q47NQCV5konga7f9icZAoraZU7unYkjBMsGJhJ9AHbfkRH6",
+"http://localhost:3000/v2.keypom.testnet/D5K12eERgXopd6WGwAowii1xTDEP9mzR6jpzJrDPKbu3HQzmovbmsjjUtQhbrS8XHvhJwK9Pd1snJ5vcBTHJvcR",
+"http://localhost:3000/v2.keypom.testnet/3qztJQY4sFqiqYspMzBDMybCCF3mjFqJetgQTaNRAcVcWYN7oYVpLk1VpRYmjNm9BMzA3UZi3v1At5G9rLQc4ENZ",
+"http://localhost:3000/v2.keypom.testnet/2ywwpwiFi6dXkbzCLWnRJenLTxiuQKmxmh5qUjMoCTJaBYSCyyYkb1sgrgEyrbFhD5TifvqTwKeVSMnUwu7jRHoz",
+"http://localhost:3000/v2.keypom.testnet/2mzXzMzAfmaLKvcqJB8q1EawgYCC2GFyYNqRLLZWDNfhw8iXAgDCB6ri5xrfBqbEL9tFfpBArms1Hy4z6Nuz72Nf",
+"http://localhost:3000/v2.keypom.testnet/4qduiKMSM15BUyGrdef9bD8yJhJbTX8DhXMwPCMcaWL5i5TrzcLUC6N4yfFLjA5LJCx1mkka2ePSLmV6gyxGKdim",
+"http://localhost:3000/v2.keypom.testnet/4TW6ZHXrUJ7Q67cuVsDruYxqCZYnnnjEwYTuJK9fYZNTWaaiDGPuhuWTRMCLvWyy9WX29qs9tCUeEP1ESFUFyu5U",
+"http://localhost:3000/v2.keypom.testnet/4q21Qw99uwt9fVw3PnPyNWrM1qgB5RPxPUG6UJ7ocn6sAANQ7CvLanHc7Db3TbEno7mv8jAAJbnPGXjmdd8D1DoE",
+"http://localhost:3000/v2.keypom.testnet/3jqCFKM4S4FsHJUxKaj4BqGvWc5bngtXRXcx6f7zzj6ikFVaVfHxGoxgbma5uGKktHH2BEq55h2yYTZNUpPZ8TWH",
+"http://localhost:3000/v2.keypom.testnet/3YegaKWNd8KjDBfYUdnKMJ5euxpVx66zreRo9JaDJMrhzbR42jjJva3hn7rkNVibXfTFsmh2oA1r9FJkn7VNVeNc",
+"http://localhost:3000/v2.keypom.testnet/2zKMGefpGzgYDoRcrchfD6qwqS4ZiLrKrLnkgnEdhDZXD317k9xepsHZrqckiLicSMmw6XCfGZDUemhjo9nuN8yz"
+]})
+Doing account.functionCall()
+Transaction Id 6sUZcwBvwAxiWZ9GFSw7YzL4zaMrYcQrNXvVPoW3AC5r
+To see the transaction in the transaction explorer, please open this url in your browser
+https://explorer.testnet.near.org/transactions/6sUZcwBvwAxiWZ9GFSw7YzL4zaMrYcQrNXvVPoW3AC5r
+''
+#+end_example
+
+** Set Premium Price
+#+begin_src sh :results output
+near call dev-1683985953930-26156146132065 ticket_premium_price '{"price": 100, "near_price": 1.6}' --account-id dev-1683985953930-26156146132065
+#+end_src
+
+#+RESULTS:
+: Scheduling a call: dev-1683985953930-26156146132065.ticket_premium_price({"price": 100, "near_price": 1.6})
+: Doing account.functionCall()
+: Transaction Id 9nJUSWFV6iuZRR23JLJcL5771D6mNiqkKpmzJfUmFnWT
+: To see the transaction in the transaction explorer, please open this url in your browser
+: https://explorer.testnet.near.org/transactions/9nJUSWFV6iuZRR23JLJcL5771D6mNiqkKpmzJfUmFnWT
 : ''
 
 #+begin_src sh :results output
-near call dev-1683909771895-45807031486367 add_tickets '{"ticket_links" : ["helloslkdjflaskjdf", "helakdjfasl","alsdkfjalksdjfla", "aldjflaksdjfl"]}' --account-id dev-1683909771895-45807031486367
+near view dev-1683985953930-26156146132065 get_ticket_price
 #+end_src
 
 #+RESULTS:
-: Scheduling a call: dev-1683909771895-45807031486367.add_tickets({"ticket_links" : ["helloslkdjflaskjdf", "helakdjfasl","alsdkfjalksdjfla", "aldjflaksdjfl"]})
+: View call: dev-1683985953930-26156146132065.get_ticket_price()
+: 62
+
+** Get All Tickets Premium
+#+begin_src sh :results output
+near call dev-1683985953930-26156146132065 get_all_tickets_premium '{"" : }'
+#+end_src
+
+** Purchase Premium Ticket
+#+begin_src sh :results output
+near call dev-1683985953930-26156146132065 purchase_premium_ticket --account-id eamon2.testnet --amount 62
+#+end_src
+
+#+RESULTS:
+: Scheduling a call: dev-1683985953930-26156146132065.purchase_premium_ticket() with attached 62 NEAR
 : Doing account.functionCall()
-: Transaction Id BLsQZhpBVinCLzg8gLgn8psUQpZoP8ESEEkL31w9bSGP
+: Receipts: Ffq4jHsYg2rwhR93XBpUyq9pYLa83BRCkmf4Ndt4YSfd, D51txDzSG2wj9bUvGf4JvyLakWYT56uM9xWV2NnSQ62p
+:   Log [dev-1683985953930-26156146132065]: EVENT_JSON:{"standard":"1.0.0","event":"purchase","data":[{"owner_id":"eamon2.testnet","ticket_link":"http://localhost:3000/v2.keypom.testnet/5mPwKWL5kdVZGfVeKRZHLG1ZvfA35NBVjfBBd9s9mf1GKP4DxkVdPJ3dRUD2YLvSMNquWZPAukgxG2yVBHRkzs7b"}]}
+: Transaction Id 46Ny37KU1VC9NW49G1XSBkcpnhUAS5Yg2it4EgbjDYdV
 : To see the transaction in the transaction explorer, please open this url in your browser
-: https://explorer.testnet.near.org/transactions/BLsQZhpBVinCLzg8gLgn8psUQpZoP8ESEEkL31w9bSGP
+: https://explorer.testnet.near.org/transactions/46Ny37KU1VC9NW49G1XSBkcpnhUAS5Yg2it4EgbjDYdV
 : ''
 
+* List
 #+begin_src sh :results output
-near view dev-1683909771895-45807031486367 get_price
+[
+"http://localhost:3000/v2.keypom.testnet/5mPwKWL5kdVZGfVeKRZHLG1ZvfA35NBVjfBBd9s9mf1GKP4DxkVdPJ3dRUD2YLvSMNquWZPAukgxG2yVBHRkzs7b",
+"http://localhost:3000/v2.keypom.testnet/JwJieu2vQv4WJiwMaA8UqQeW7TuEgHnZ4BHAMuVKNXqMFuscSoUT1WamryumrQUPznn7YhU97rjy7mhuevbeniF",
+"http://localhost:3000/v2.keypom.testnet/5PsWwFPW33VM98trayd7ET7g6jPQMyJWZbS1Vm4MaBp9qzySn4eLqeYs4mhvU8kaugzb8HAuzyLhYkqqibqGejyR",
+"http://localhost:3000/v2.keypom.testnet/fFeQaHmAidRzU1cQP99wCqb4Lfdw79vZMmmPjq4onbQzto4ByKzr8RM8CJigqHkY2jYgXLw9v1DpdcYKa5Ujwoz",
+"http://localhost:3000/v2.keypom.testnet/5e5Xv2hCm5E8nRbrq56nXxyf4jeaoEgBQSAdeWf1b1BeDB8LP5t39VW4zHFKYEXviS1JVqJ7Rds4B9fetBxNix9o",
+"http://localhost:3000/v2.keypom.testnet/5ArQgHXCotw5x54tRkoNFrxU3o9gayWUu2VbAyfMgUGoNg7fbHp3DLdCqoFWU5USGMybGNn6euPGPKVZKYry72XB",
+"http://localhost:3000/v2.keypom.testnet/9ewFaGDXrY1XzrYXD6n2hRJnbSizkjWfJL2WktQSLPeSN9fqAesgQL4xzNeE9pkVgP9fVDnix98drTQxMToZC3k",
+"http://localhost:3000/v2.keypom.testnet/4ifNKGQX7Ho4KuAM54aLBXYF1WBGSQRZipyjdMqRn87u9K82wkL2uFG9iSdE61bqWVsjZjSTcedGzLwAWQSrdQKp",
+"http://localhost:3000/v2.keypom.testnet/2yZJMLp3KgxWTKjChm4HDaTN34im3ykiKa7EykQmfUKZPDCSUzeQyWeHjREQvkVyrL88zT4jCPjikk4fih2Fdukq",
+"http://localhost:3000/v2.keypom.testnet/2tuSojk6u817XjKKrHwzFtLVcmKaFvXZ8SuWEogx9Q47NQCV5konga7f9icZAoraZU7unYkjBMsGJhJ9AHbfkRH6",
+"http://localhost:3000/v2.keypom.testnet/D5K12eERgXopd6WGwAowii1xTDEP9mzR6jpzJrDPKbu3HQzmovbmsjjUtQhbrS8XHvhJwK9Pd1snJ5vcBTHJvcR",
+"http://localhost:3000/v2.keypom.testnet/3qztJQY4sFqiqYspMzBDMybCCF3mjFqJetgQTaNRAcVcWYN7oYVpLk1VpRYmjNm9BMzA3UZi3v1At5G9rLQc4ENZ",
+"http://localhost:3000/v2.keypom.testnet/2ywwpwiFi6dXkbzCLWnRJenLTxiuQKmxmh5qUjMoCTJaBYSCyyYkb1sgrgEyrbFhD5TifvqTwKeVSMnUwu7jRHoz",
+"http://localhost:3000/v2.keypom.testnet/2mzXzMzAfmaLKvcqJB8q1EawgYCC2GFyYNqRLLZWDNfhw8iXAgDCB6ri5xrfBqbEL9tFfpBArms1Hy4z6Nuz72Nf",
+"http://localhost:3000/v2.keypom.testnet/4qduiKMSM15BUyGrdef9bD8yJhJbTX8DhXMwPCMcaWL5i5TrzcLUC6N4yfFLjA5LJCx1mkka2ePSLmV6gyxGKdim",
+"http://localhost:3000/v2.keypom.testnet/4TW6ZHXrUJ7Q67cuVsDruYxqCZYnnnjEwYTuJK9fYZNTWaaiDGPuhuWTRMCLvWyy9WX29qs9tCUeEP1ESFUFyu5U",
+"http://localhost:3000/v2.keypom.testnet/4q21Qw99uwt9fVw3PnPyNWrM1qgB5RPxPUG6UJ7ocn6sAANQ7CvLanHc7Db3TbEno7mv8jAAJbnPGXjmdd8D1DoE",
+"http://localhost:3000/v2.keypom.testnet/3jqCFKM4S4FsHJUxKaj4BqGvWc5bngtXRXcx6f7zzj6ikFVaVfHxGoxgbma5uGKktHH2BEq55h2yYTZNUpPZ8TWH",
+"http://localhost:3000/v2.keypom.testnet/3YegaKWNd8KjDBfYUdnKMJ5euxpVx66zreRo9JaDJMrhzbR42jjJva3hn7rkNVibXfTFsmh2oA1r9FJkn7VNVeNc",
+"http://localhost:3000/v2.keypom.testnet/2zKMGefpGzgYDoRcrchfD6qwqS4ZiLrKrLnkgnEdhDZXD317k9xepsHZrqckiLicSMmw6XCfGZDUemhjo9nuN8yz"
+];
 #+end_src
-
-#+RESULTS:
-: View call: dev-1683909771895-45807031486367.get_price()
-: 1
-
-#+begin_src sh :results output
-near view dev-1683909771895-45807031486367 get_ticket '{"key": 1}'
-#+end_src
-
-#+RESULTS:
-: View call: dev-1683909771895-45807031486367.get_ticket({"key": 1})
-: 'helakdjfasl'
-
-#+begin_src sh :results output
-near view dev-1683909771895-45807031486367 get_all_tickets
-#+end_src
-
-#+begin_src sh :results output
-near call dev-1683909771895-45807031486367 add_coupon '{"code": "NEARAPAC", "discount": 50}' --account-id dev-1683909771895-45807031486367
-#+end_src
-
-#+RESULTS:
-: Scheduling a call: dev-1683909771895-45807031486367.add_coupon({"code": "NEARAPAC", "discount": 50})
-: Doing account.functionCall()
-: Transaction Id HJMmuBSDHxhfPZZBefDzVEGXcUyqYVmfqNAYbS4cXDQv
-: To see the transaction in the transaction explorer, please open this url in your browser
-: https://explorer.testnet.near.org/transactions/HJMmuBSDHxhfPZZBefDzVEGXcUyqYVmfqNAYbS4cXDQv
-: ''
-
-
-#+begin_src sh :results output
-near call dev-1683909771895-45807031486367 purchase_ticket '{"coupon_code" : "NEARAPAC"}' --account-id eamon.testnet --amount 1
-#+end_src
-
-#+RESULTS:
-: Scheduling a call: dev-1683909771895-45807031486367.purchase_ticket({"coupon_code" : "NEARAPAC"}) with attached 1 NEAR
-: Doing account.functionCall()
-: Transaction Id 2ZN22o7acu3fc4FXw3nxpkX6nksXVgWPfdTfyRYhwx9o
-: To see the transaction in the transaction explorer, please open this url in your browser
-: https://explorer.testnet.near.org/transactions/2ZN22o7acu3fc4FXw3nxpkX6nksXVgWPfdTfyRYhwx9o
-: ''
