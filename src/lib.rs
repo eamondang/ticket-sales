@@ -16,6 +16,7 @@ pub struct Contract {
   tickets_premium: UnorderedMap<u64, String>,
   coupons: UnorderedMap<String, u32>,
   info: UnorderedMap<String, String>,
+  pub elite_price: Balance,
   pub premium_price: Balance,
   pub ticket_standard_saled: u64,
   pub ticket_elite_saled: u64,
@@ -35,6 +36,7 @@ impl Contract {
       tickets_premium: UnorderedMap::new(b"tickets_premium".to_vec()),
       coupons: UnorderedMap::new(b"coupons".to_vec()),
       info: UnorderedMap::new(b"info".to_vec()),
+      elite_price: 0,
       premium_price: 0,
       ticket_standard_saled: 0,
       ticket_elite_saled: 0,
@@ -55,7 +57,7 @@ impl Contract {
   }
 
   pub fn get_all_tickets_standard(&self) -> Vec<(u64, String)> {
-    assert_eq!(env::signer_account_id(), self.owner_id, "Only the owner can add coupons.");
+    assert_eq!(env::signer_account_id(), self.owner_id, "Only the owner get tickets.");
     let mut all_tickets = Vec::new();
 
     for key in 0..self.tickets_standard.len() {
@@ -78,7 +80,7 @@ impl Contract {
   }
 
   pub fn get_all_tickets_elite(&self) -> Vec<(u64, String)> {
-    assert_eq!(env::signer_account_id(), self.owner_id, "Only the owner can add coupons.");
+    assert_eq!(env::signer_account_id(), self.owner_id, "Only the owner get all tickets.");
     let mut all_tickets = Vec::new();
 
     for key in 0..self.tickets_elite.len() {
@@ -91,7 +93,7 @@ impl Contract {
   }
 
   pub fn add_tickets_premium(&mut self, ticket_links: Vec<String>) {
-    assert_eq!(env::signer_account_id(), self.owner_id, "Only the owner can add tickets.");
+    assert_eq!(env::signer_account_id(), self.owner_id, "Only the owner can add all tickets.");
     let mut key = self.tickets_premium.len();
 
     for link in ticket_links {
@@ -101,7 +103,7 @@ impl Contract {
   }
 
   pub fn get_all_tickets_premium(&self) -> Vec<(u64, String)> {
-    assert_eq!(env::signer_account_id(), self.owner_id, "Only the owner can add coupons.");
+    assert_eq!(env::signer_account_id(), self.owner_id, "Only the owner can get all tickets.");
     let mut all_tickets = Vec::new();
 
     for key in 0..self.tickets_premium.len() {
@@ -120,24 +122,26 @@ impl Contract {
 
   // Get a single coupon by its code
   pub fn get_coupon(&self, coupon_code: String) -> Option<u32> {
-    assert_eq!(env::signer_account_id(), self.owner_id, "Only the owner can add coupons.");
+    assert_eq!(env::signer_account_id(), self.owner_id, "Only the owner can get coupons.");
     self.coupons.get(&coupon_code)
   }
 
   // Get all coupons as a vector of tuples (coupon_code, discount)
   pub fn get_all_coupons(&self) -> Vec<(String, u32)> {
-    assert_eq!(env::signer_account_id(), self.owner_id, "Only the owner can add coupons.");
+    assert_eq!(env::signer_account_id(), self.owner_id, "Only the owner can get all coupons.");
     self.coupons.iter().collect()
   }
 
   pub fn get_all_info(&self) -> Vec<(String, String)> {
-    assert_eq!(env::signer_account_id(), self.owner_id, "Only the owner can add coupons.");
+    assert_eq!(env::signer_account_id(), self.owner_id, "Only the owner can get Info.");
     self.info.iter().collect()
   }
 
-  pub fn purchase_elite_ticket(&mut self, email: Option<String>, telephone: Option<String>) {
+  #[payable]
+  pub fn purchase_elite_ticket(&mut self, email: Option<String>, telephone: Option<String>) -> Promise {
     let signer = env::signer_account_id();
     let key = self.ticket_elite_saled;
+    let price = self.get_elite_price();
 
     if email.is_some() & telephone.is_none() {
       self.info.insert(&email.unwrap(), &"".to_string());
@@ -147,6 +151,7 @@ impl Contract {
       self.info.insert(&email.unwrap(), &telephone.unwrap());
     }
 
+    assert!(env::attached_deposit() >= price, "Not enough deposit for the ticket.");
     assert!(!self.buyers.contains(&signer), "This wallet has already purchased a ticket.");
     assert!(self.ticket_elite_saled < 2000, "Ticket sale limit reached.");
 
@@ -165,23 +170,34 @@ impl Contract {
     };
 
     env::log_str(&purchase_log.to_string());
+    Promise::new(self.owner_id.clone()).transfer(price)
   }
 
   pub fn ticket_premium_price(&mut self, price: Balance, near_price: f32) {
-    assert_eq!(env::signer_account_id(), self.owner_id, "Only the owner can add coupons.");
+    assert_eq!(env::signer_account_id(), self.owner_id, "Only the owner can Change Price.");
     let new_price = (price as f32 / near_price) as u128;
     self.premium_price = new_price;
   }
 
-  pub fn get_ticket_price(&self) -> Balance {
+  pub fn get_premium_price(&self) -> Balance {
     self.premium_price
+  }
+
+  pub fn ticket_elite_price(&mut self, price: Balance, near_price: f32) {
+    assert_eq!(env::signer_account_id(), self.owner_id, "Only the owner can Change Price.");
+    let new_price = (price as f32 / near_price) as u128;
+    self.elite_price = new_price;
+  }
+
+  pub fn get_elite_price(&self) -> Balance {
+    self.elite_price
   }
 
   #[payable]
   pub fn purchase_premium_ticket(&mut self, email: Option<String>, telephone: Option<String>) -> Promise {
     let signer = env::signer_account_id();
     let key = self.ticket_premium_saled;
-    let price = self.get_ticket_price();
+    let price = self.get_premium_price();
 
     if email.is_some() & telephone.is_none() {
       self.info.insert(&email.unwrap(), &"".to_string());
