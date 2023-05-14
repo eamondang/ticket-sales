@@ -1,6 +1,9 @@
 use std::fmt;
 
-use near_sdk::serde::{Deserialize, Serialize};
+use near_sdk::{
+  serde::{Deserialize, Serialize},
+  Balance,
+};
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(tag = "event", content = "data")]
@@ -16,6 +19,7 @@ pub enum EventLogVariant {
 pub struct PurchaseTicket {
   pub owner_id: String,
   pub ticket_link: String,
+  pub price: Balance,
   #[serde(skip_serializing_if = "Option::is_none")]
   pub memo: Option<String>,
 }

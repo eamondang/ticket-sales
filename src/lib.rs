@@ -22,7 +22,7 @@ pub struct Contract {
   pub ticket_elite_saled: u64,
   pub ticket_premium_saled: u64,
   pub buyers: LookupSet<AccountId>,
-  pub buyer_ticket_links: UnorderedMap<AccountId, String>,
+  pub buyer_ticket_links: UnorderedMap<AccountId, Vec<String>>,
 }
 
 #[near_bindgen]
@@ -143,17 +143,10 @@ impl Contract {
     let key = self.ticket_elite_saled;
     let price = self.get_elite_price();
 
-    if email.is_some() & telephone.is_none() {
-      self.info.insert(&email.unwrap(), &"".to_string());
-    } else if email.is_none() & telephone.is_some() {
-      self.info.insert(&"".to_string(), &telephone.unwrap());
-    } else {
-      self.info.insert(&email.unwrap(), &telephone.unwrap());
-    }
-
     assert!(env::attached_deposit() >= price, "Not enough deposit for the ticket.");
     assert!(!self.buyers.contains(&signer), "This wallet has already purchased a ticket.");
     assert!(self.ticket_elite_saled < 2000, "Ticket sale limit reached.");
+    self.info.insert(&email.unwrap(), &telephone.unwrap());
 
     let ticket_link = self.tickets_elite.get(&key).expect("Ticket not available");
     self.tickets_elite.remove(&key);
@@ -161,12 +154,19 @@ impl Contract {
     self.buyers.insert(&signer);
 
     // Add the ticket link to the buyer_ticket_links map
-    self.buyer_ticket_links.insert(&signer, &ticket_link);
+    let mut buyer_links = self.buyer_ticket_links.get(&signer).unwrap_or_else(|| vec![]);
+    buyer_links.push(ticket_link.clone());
+    self.buyer_ticket_links.insert(&signer, &buyer_links);
 
     // Log the ticket link as an event
     let purchase_log: EventLog = EventLog {
       standard: "1.0.0".to_string(),
-      event: EventLogVariant::Purchase(vec![PurchaseTicket { owner_id: signer.to_string(), ticket_link, memo: None }]),
+      event: EventLogVariant::Purchase(vec![PurchaseTicket {
+        owner_id: signer.to_string(),
+        price,
+        ticket_link,
+        memo: None,
+      }]),
     };
 
     env::log_str(&purchase_log.to_string());
@@ -199,38 +199,38 @@ impl Contract {
     let key = self.ticket_premium_saled;
     let price = self.get_premium_price();
 
-    if email.is_some() & telephone.is_none() {
-      self.info.insert(&email.unwrap(), &"".to_string());
-    } else if email.is_none() & telephone.is_some() {
-      self.info.insert(&"".to_string(), &telephone.unwrap());
-    } else {
-      self.info.insert(&email.unwrap(), &telephone.unwrap());
-    }
-
     assert!(env::attached_deposit() >= price, "Not enough deposit for the ticket.");
     assert!(self.tickets_premium.get(&key).is_some(), "Ticket not available.");
     assert!(self.ticket_premium_saled < 1000, "Ticket sale limit reached.");
 
+    self.info.insert(&email.unwrap(), &telephone.unwrap());
     let ticket_link = self.tickets_premium.get(&key).expect("Ticket not available");
     self.tickets_premium.remove(&key);
     self.ticket_premium_saled += 1;
 
-    // Add the ticket link to the buyer_ticket_links map
-    self.buyer_ticket_links.insert(&signer, &ticket_link);
+    let mut buyer_links = self.buyer_ticket_links.get(&signer).unwrap_or_else(|| vec![]);
+    buyer_links.push(ticket_link.clone());
+    self.buyer_ticket_links.insert(&signer, &buyer_links);
 
     // Log the ticket link as an event
     let purchase_log: EventLog = EventLog {
       standard: "1.0.0".to_string(),
-      event: EventLogVariant::Purchase(vec![PurchaseTicket { owner_id: signer.to_string(), ticket_link, memo: None }]),
+      event: EventLogVariant::Purchase(vec![PurchaseTicket {
+        owner_id: signer.to_string(),
+        price,
+        ticket_link,
+        memo: None,
+      }]),
     };
 
     env::log_str(&purchase_log.to_string());
 
+    // Update this part to refund any extra deposit
     Promise::new(self.owner_id.clone()).transfer(price)
   }
 
   // Add this function to get a ticket link for a specific buyer
-  pub fn get_ticket_link_by_buyer(&self, account_id: AccountId) -> Option<String> {
+  pub fn get_ticket_links_by_buyer(&self, account_id: AccountId) -> Option<Vec<String>> {
     self.buyer_ticket_links.get(&account_id)
   }
 
