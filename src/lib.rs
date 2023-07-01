@@ -1,11 +1,25 @@
+mod event;
+pub use crate::event::*;
+use near_sdk::serde::{Deserialize, Serialize};
+use near_sdk::PromiseError;
 use near_sdk::{
   borsh::{self, BorshDeserialize, BorshSerialize},
   collections::{LookupSet, UnorderedMap},
-  env, near_bindgen, AccountId, Balance, PanicOnDefault, Promise,
+  env, ext_contract,
+  json_types::U128,
+  near_bindgen, AccountId, Balance, PanicOnDefault, Promise,
 };
 
-mod event;
-pub use crate::event::*;
+const TRANSFER_AMOUNT: Balance = 1_000_000_000_000_000_000_000_000;
+
+pub const TGAS: u64 = 1_000_000_000_000;
+pub const NO_DEPOSIT: u128 = 0;
+pub const XCC_SUCCESS: u64 = 1;
+
+#[ext_contract(ext_ft_contract)]
+pub trait FungibleTokenCore {
+  fn ft_transfer_call(&mut self, receiver_id: AccountId, amount: U128, memo: Option<String>, msg: String) -> Promise;
+}
 
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
@@ -42,6 +56,92 @@ impl Contract {
       buyers: LookupSet::new(b"buyers".to_vec()),
       buyer_ticket_links: UnorderedMap::new(b"buyer_ticket".to_vec()),
     }
+  }
+
+  pub fn ft_on_transfer(&mut self, sender_id: AccountId, amount: Balance, msg: String) -> String {
+    if msg == "VIP" {
+      self.purchase_vip_ticket();
+    } else if msg == "PREMIUM" {
+      self.purchase_premium_ticket();
+    }
+    "0".to_string()
+  }
+
+  pub fn purchase_premium_ticket(&mut self) {
+    let signer = env::signer_account_id();
+    let key = self.ticket_premium_saled;
+
+    assert!(self.tickets_premium.get(&key).is_some(), "Ticket not available.");
+    assert_eq!(TRANSFER_AMOUNT, env::attached_deposit(), "Not Equal");
+
+    let ticket_link = self.tickets_premium.get(&key).expect("Ticket not available");
+    self.tickets_premium.remove(&key);
+    self.ticket_premium_saled += 1;
+
+    let mut buyer_links = self.buyer_ticket_links.get(&signer).unwrap_or_else(|| vec![]);
+    buyer_links.push(ticket_link.clone());
+    self.buyer_ticket_links.insert(&signer, &buyer_links);
+
+    // Log the ticket link as an event
+    let purchase_log: EventLog = EventLog {
+      standard: "1.0.0".to_string(),
+      event: EventLogVariant::Purchase(vec![PurchaseTicket {
+        owner_id: signer.to_string(),
+        price: 0,
+        ticket_link,
+        memo: None,
+      }]),
+    };
+
+    env::log_str(&purchase_log.to_string());
+  }
+
+  pub fn purchase_vip_ticket(&mut self) {
+    let signer = env::signer_account_id();
+    let key = self.ticket_vip_saled;
+
+    assert!(self.ticket_vip_saled < 2000, "Ticket sale limit reached.");
+    let ticket_link = self.tickets_vip.get(&key).expect("Ticket not available");
+
+    self.tickets_vip.remove(&key);
+    self.ticket_vip_saled += 1;
+    self.buyers.insert(&signer);
+
+    // Add the ticket link to the buyer_ticket_links map
+    let mut buyer_links = self.buyer_ticket_links.get(&signer).unwrap_or_else(|| vec![]);
+    buyer_links.push(ticket_link.clone());
+    self.buyer_ticket_links.insert(&signer, &buyer_links);
+
+    // Log the ticket link as an event
+    let purchase_log: EventLog = EventLog {
+      standard: "1.0.0".to_string(),
+      event: EventLogVariant::Purchase(vec![PurchaseTicket {
+        owner_id: signer.to_string(),
+        price: 0,
+        ticket_link,
+        memo: None,
+      }]),
+    };
+
+    env::log_str(&purchase_log.to_string());
+  }
+
+  #[private]
+  pub fn transfer_callback(&mut self, #[callback_result] call_result: Result<(), PromiseError>) -> bool {
+    // Return whether or not the promise succeeded using the method outlined in external.rs
+    if call_result.is_err() {
+      env::log_str("failed...");
+      false
+    } else {
+      env::log_str("transfer was successful!");
+      true
+    }
+  }
+
+  pub fn set_premium_price(&mut self, new_price: u128) -> Balance {
+    assert_eq!(env::signer_account_id(), self.owner_id, "Only the owner can add tickets.");
+    self.premium_price = new_price;
+    self.premium_price
   }
 
   pub fn add_tickets_standard(&mut self, ticket_links: Vec<String>) {
@@ -135,19 +235,21 @@ impl Contract {
     self.coupons.iter().collect()
   }
 
-  #[payable]
-  pub fn purchase_vip_ticket(&mut self) -> Promise {
+  pub fn check_standard_has_get(&self) -> bool {
     let signer = env::signer_account_id();
-    let key = self.ticket_vip_saled;
-    let price = self.get_vip_price();
+    self.buyers.contains(&signer)
+  }
 
-    assert!(env::attached_deposit() >= price, "Not enough deposit for the ticket.");
+  pub fn purchase_standard_ticket(&mut self) {
+    let signer = env::signer_account_id();
+    let key = self.ticket_standard_saled;
+
     assert!(!self.buyers.contains(&signer), "This wallet has already purchased a ticket.");
     assert!(self.ticket_vip_saled < 2000, "Ticket sale limit reached.");
-    let ticket_link = self.tickets_vip.get(&key).expect("Ticket not available");
+    let ticket_link = self.tickets_standard.get(&key).expect("Ticket not available");
 
-    self.tickets_vip.remove(&key);
-    self.ticket_vip_saled += 1;
+    self.tickets_standard.remove(&key);
+    self.ticket_standard_saled += 1;
     self.buyers.insert(&signer);
 
     // Add the ticket link to the buyer_ticket_links map
@@ -160,14 +262,13 @@ impl Contract {
       standard: "1.0.0".to_string(),
       event: EventLogVariant::Purchase(vec![PurchaseTicket {
         owner_id: signer.to_string(),
-        price,
+        price: 0,
         ticket_link,
         memo: None,
       }]),
     };
 
     env::log_str(&purchase_log.to_string());
-    Promise::new(self.owner_id.clone()).transfer(price)
   }
 
   pub fn ticket_premium_price(&mut self, price: Balance, near_price: f32) -> Balance {
@@ -191,48 +292,13 @@ impl Contract {
     self.vip_price
   }
 
-  #[payable]
-  pub fn purchase_premium_ticket(&mut self) -> Promise {
-    let signer = env::signer_account_id();
-    let key = self.ticket_premium_saled;
-    let price = self.get_premium_price();
-
-    assert!(env::attached_deposit() >= price, "Not enough deposit for the ticket.");
-    assert!(self.tickets_premium.get(&key).is_some(), "Ticket not available.");
-    assert!(self.ticket_premium_saled < 1000, "Ticket sale limit reached.");
-
-    let ticket_link = self.tickets_premium.get(&key).expect("Ticket not available");
-    self.tickets_premium.remove(&key);
-    self.ticket_premium_saled += 1;
-
-    let mut buyer_links = self.buyer_ticket_links.get(&signer).unwrap_or_else(|| vec![]);
-    buyer_links.push(ticket_link.clone());
-    self.buyer_ticket_links.insert(&signer, &buyer_links);
-
-    // Log the ticket link as an event
-    let purchase_log: EventLog = EventLog {
-      standard: "1.0.0".to_string(),
-      event: EventLogVariant::Purchase(vec![PurchaseTicket {
-        owner_id: signer.to_string(),
-        price,
-        ticket_link,
-        memo: None,
-      }]),
-    };
-
-    env::log_str(&purchase_log.to_string());
-
-    // Update this part to refund any extra deposit
-    Promise::new(self.owner_id.clone()).transfer(price)
-  }
-
   // Add this function to get a ticket link for a specific buyer
   pub fn get_ticket_links_by_buyer(&self, account_id: AccountId) -> Option<Vec<String>> {
     self.buyer_ticket_links.get(&account_id)
   }
 
   pub fn count_standard(&self) -> u64 {
-    self.ticket_vip_saled
+    self.ticket_standard_saled
   }
 
   pub fn count_vipd(&self) -> u64 {
