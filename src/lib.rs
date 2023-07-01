@@ -78,11 +78,11 @@ impl Contract {
     let key = self.ticket_premium_saled;
 
     assert!(self.tickets_premium.get(&key).is_some(), "Ticket not available.");
-    assert_eq!(TRANSFER_AMOUNT, env::attached_deposit(), "Not Equal");
-
     let ticket_link = self.tickets_premium.get(&key).expect("Ticket not available");
+
     self.tickets_premium.remove(&key);
     self.ticket_premium_saled += 1;
+    self.buyers.insert(&signer);
 
     let mut buyer_links = self.buyer_ticket_links.get(&signer).unwrap_or_else(|| vec![]);
     buyer_links.push(ticket_link.clone());
@@ -240,7 +240,7 @@ impl Contract {
     let key = self.ticket_standard_saled;
 
     assert!(!self.buyers.contains(&signer), "This wallet has already purchased a ticket.");
-    assert!(self.ticket_vip_saled < 2000, "Ticket sale limit reached.");
+    assert!(self.ticket_standard_saled < 2000, "Ticket sale limit reached.");
     let ticket_link = self.tickets_standard.get(&key).expect("Ticket not available");
 
     self.tickets_standard.remove(&key);
