@@ -1,7 +1,6 @@
 mod event;
 pub use crate::event::*;
 use near_sdk::serde::{Deserialize, Serialize};
-use near_sdk::PromiseError;
 use near_sdk::{
   borsh::{self, BorshDeserialize, BorshSerialize},
   collections::{LookupSet, UnorderedMap},
@@ -9,6 +8,7 @@ use near_sdk::{
   json_types::U128,
   near_bindgen, AccountId, Balance, PanicOnDefault, Promise,
 };
+use near_sdk::{log, utils, Gas, PromiseError};
 
 const TRANSFER_AMOUNT: Balance = 1_000_000_000_000_000_000_000_000;
 
@@ -67,8 +67,9 @@ impl Contract {
     "0".to_string()
   }
 
+  #[private]
   pub fn purchase_premium_ticket(&mut self) {
-    let signer = env::signer_account_id();
+    let signer = env::predecessor_account_id();
     let key = self.ticket_premium_saled;
 
     assert!(self.tickets_premium.get(&key).is_some(), "Ticket not available.");
@@ -96,8 +97,20 @@ impl Contract {
     env::log_str(&purchase_log.to_string());
   }
 
-  pub fn purchase_vip_ticket(&mut self) {
-    let signer = env::signer_account_id();
+  #[private]
+  pub fn query_transfer_callback(&mut self, #[callback_result] call_result: Result<(), PromiseError>) -> bool {
+    // Return whether or not the promise succeeded using the method outlined in external.rs
+    if call_result.is_err() {
+      env::log_str("failed...");
+      false
+    } else {
+      env::log_str("transfer was successful!");
+      true
+    }
+  }
+
+  pub fn purchase_vip_ticket(&mut self) -> Promise {
+    let signer = env::predecessor_account_id();
     let key = self.ticket_vip_saled;
 
     assert!(self.ticket_vip_saled < 2000, "Ticket sale limit reached.");
@@ -124,18 +137,11 @@ impl Contract {
     };
 
     env::log_str(&purchase_log.to_string());
-  }
 
-  #[private]
-  pub fn transfer_callback(&mut self, #[callback_result] call_result: Result<(), PromiseError>) -> bool {
-    // Return whether or not the promise succeeded using the method outlined in external.rs
-    if call_result.is_err() {
-      env::log_str("failed...");
-      false
-    } else {
-      env::log_str("transfer was successful!");
-      true
-    }
+    ext_ft_contract::ext("usdt.tether-token.near".parse().unwrap())
+      .with_static_gas(Gas(5 * TGAS))
+      .ft_transfer_call("tickets.nearapac.near".parse().unwrap(), U128(10), None, "VIP".to_string())
+      .then(Self::ext(env::current_account_id()).with_static_gas(Gas(5 * TGAS)).query_transfer_callback())
   }
 
   pub fn set_premium_price(&mut self, new_price: u128) -> Balance {
