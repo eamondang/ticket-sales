@@ -1,0 +1,3 @@
+#+begin_src sh :results output
+near call <ft-contract> ft_transfer_call '{"receiver_id": "<receiver-contract>", "amount": "<amount>", "msg": "<a-string-message>"}' --accountId <user_account_id> --depositYocto 1
+#+end_src

@@ -9,6 +9,7 @@ edition = "2021"
 aes = "0.8.2"
 block-modes = "0.9.1"
 block-padding = "0.3.3"
+bs58 = "0.5.0"
 near-sdk = "4.1.1"
 serde_json = "1.0.96"
 
